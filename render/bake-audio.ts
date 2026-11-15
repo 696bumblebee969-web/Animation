@@ -18,7 +18,10 @@ async function main() {
   console.log('Audio stems ready in public/audio/');
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Exit explicitly: the native Web Audio threads can keep the Node process alive after the work is done.
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

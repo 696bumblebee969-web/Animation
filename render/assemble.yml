@@ -1,0 +1,42 @@
+name: assemble-from-existing-run
+
+# Reuses video chunks already rendered by an earlier 'render-the-last-star' run,
+# so you do not have to re-render frames. Input: that run's ID (the number in its URL).
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Run ID of the earlier render run (number at the end of its URL)'
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  assemble:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng
+      - run: npm ci
+      - run: npm run bake:audio
+        timeout-minutes: 10
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: chunk-*
+          path: out
+          merge-multiple: true
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+      - run: ls -la out
+      - run: npm run concat:chunks
+      - run: npm run encode
+      - uses: actions/upload-artifact@v4
+        with: { name: the-last-star-mp4, path: out/the-last-star.mp4 }

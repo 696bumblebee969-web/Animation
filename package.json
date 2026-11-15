@@ -1,0 +1,36 @@
+{
+  "name": "the-last-star",
+  "version": "1.0.0",
+  "description": "30-second procedural 2D/2.5D animated short film using PixiJS, GSAP, Remotion, Tone.js, and FFmpeg",
+  "private": true,
+  "scripts": {
+    "bake:audio": "tsx render/bake-audio.ts",
+    "studio": "remotion studio src/remotion/index.ts",
+    "render:video": "tsx render/render.ts",
+    "encode": "tsx render/encode.ts",
+    "build:all": "npm run bake:audio && npm run render:video && npm run encode",
+    "typecheck": "tsc --noEmit",
+    "concat:chunks": "tsx render/concat.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.543",
+    "@remotion/cli": "4.0.543",
+    "@remotion/media": "4.0.543",
+    "@remotion/renderer": "4.0.543",
+    "gsap": "^3.12.7",
+    "node-web-audio-api": "^2.2.0",
+    "pixi.js": "^8.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.543",
+    "tone": "^15.0.4",
+    "web-audio-api": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
